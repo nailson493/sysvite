@@ -4,6 +4,8 @@
   },
   "dependencies": {
     "apexcharts": "^3.49.1",
-    "flowbite": "^2.3.0"
+    "flowbite": "^2.3.0",
+    "sweetalert": "^2.1.2",
+    "sweetalert2": "^11.6.13"
   }
 }

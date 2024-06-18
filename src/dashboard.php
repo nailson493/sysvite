@@ -9,65 +9,10 @@ if (!isset($_SESSION['username'])) {
 <?php include "head.php"; ?>
 <?php include "menu.php"; ?>
 
-<style>
-        .flex {
-            display: flex;
-        }
-        .items-end {
-            align-items: flex-end;
-        }
-        .flex-grow {
-            flex-grow: 1;
-        }
-        .bar {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            flex-grow: 1;
-            padding-bottom: 1.25rem;
-        }
-        .bar span {
-            position: absolute;
-        }
-        .bar span.hidden {
-            display: none;
-            top: 0;
-            margin-top: -1.5rem;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-        .bar div {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-        .bar .bg-indigo-200 {
-            background-color: #c3dafe;
-        }
-        .bar .bg-indigo-300 {
-            background-color: #a3bffa;
-        }
-        .bar .bg-indigo-400 {
-            background-color: #7f9cf5;
-        }
-        .bar span.bottom {
-            bottom: 0;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-    </style>
-
 <div class="antialiased bg-gray-50 dark:bg-gray-900">
-  
-
-    <!-- Sidebar -->
-
-  
-
-    <main class="p-4 md:ml-64 h-auto pt-20">
+    <main class="p-4 md:ml-64 h-auto">
     <section class="text-gray-600 body-font">
-  <div class="container px-5 py-24 mx-auto">
+    <div class="container px-5 py-24 mx-auto">
 
     <div class="flex flex-wrap -m-4 text-center">
       <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
@@ -90,7 +35,7 @@ if (!isset($_SESSION['username'])) {
               // Exibindo o resultado na sua página HTML
               echo '<h2 class="title-font font-medium text-3xl text-gray-900">' . $total_visitas . '</h2>';
               echo '<p class="leading-relaxed mb-4">Visitas</p>';
-              echo '<a href="painel.php?r=listar_Visitas" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">Ver mais</a>              ';
+              echo '<a href="painel.php?r=listar_visitas" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">Ver mais</a>              ';
 
           } else {
               echo "0 resultados";
@@ -197,81 +142,71 @@ $conn->close();
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="../node_modules/apexcharts/dist/apexcharts.min.js"></script>
 
 <?php
-include "banco.php";
+  include "banco.php";
 
-// Consultar dados
-$sql = "SELECT destino, COUNT(*) as total_visitas FROM visitas GROUP BY destino";
-$result = $conn->query($sql);
+  // Consultar dados
+  $sql = "SELECT destino, COUNT(*) as total_visitas FROM visitas GROUP BY destino";
+  $result = $conn->query($sql);
 
-$visitas = [];
+  $visitas = [];
 
-if ($result->num_rows > 0) {
-    // Processar os dados
-    while($row = $result->fetch_assoc()) {
-        $visitas[] = $row;
-    }
-} else {
-    echo "0 results";
-}
-$conn->close();
+  if ($result->num_rows > 0) {
+      // Processar os dados
+      while($row = $result->fetch_assoc()) {
+          $visitas[] = $row;
+      }
+  } else {
+      echo "0 results";
+  }
+
+  $conn->close();
 ?>
 
 
-<div class="font-sans leading-normal tracking-normal mt-20">
+<div class="font-sans leading-normal tracking-normal mt-20 flex justify-center">
 
-    <canvas id="myChart"></canvas>
+<div class="w-[35rem] h-[35rem]" id="chart"></div>
 
     <script>
         // Converter dados PHP para JavaScript
         var visitas = <?php echo json_encode($visitas); ?>;
 
-        // Processar os dados
+        // Processar os dados para o gráfico
         var destinos = visitas.map(visita => visita.destino);
         var totalVisitas = visitas.map(visita => visita.total_visitas);
 
-        // Renderizar o gráfico
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'pie',  // Você pode mudar para 'bar' ou outro tipo se preferir
-            data: {
-                labels: destinos,
-                datasets: [{
-                    data: totalVisitas,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 206, 86, 0.7)',
-                        'rgba(75, 192, 192, 0.7)',
-                        'rgba(153, 102, 255, 0.7)',
-                        'rgba(255, 159, 64, 0.7)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+        // Configurações do gráfico com ApexCharts
+        var options = {
+            series: totalVisitas,
+            chart: {
+                type: 'polarArea',
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        fontColor: 'black',
-                        fontSize: 14,
-                        padding: 20
+            stroke: {
+                colors: ['#fff']
+            },
+            fill: {
+                opacity: 0.8
+            },
+            labels: destinos, // Utiliza os destinos como rótulos
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
                     }
                 }
-            }
-        });
+            }]
+        };
+
+        // Renderiza o gráfico com ApexCharts
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
     </script>
 
 </div>
@@ -322,6 +257,14 @@ $conn->close();
 
         window.onload = carregarDados;
     </script>
+
+    
+
+
+
+
+
+
 
 </body>
 

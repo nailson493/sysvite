@@ -50,8 +50,12 @@ include "menu.php";
                 while($row = $result->fetch_assoc()) {
                     echo '<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">';
                     echo '<th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                    <img class="w-10 h-10 rounded-full" src="'. $row["photo_path"] .'" alt="Jese image">
+                    <div class="flex-shrink-0 h-10 w-10">
+                        <img class="h-10 w-10 rounded-full cursor-pointer" src="'. $row["photo_path"] .'" alt="Jese image" onclick="openModal(\''.$row["photo_path"].'\')">
+                    </div>
                     <div class="ps-3">';
+            
+
                     echo '<div class="text-base font-semibold">'. $row["nome"] .'</div>';
                     echo '<font-normal text-gray-500">'. $row["cpf"] .'</div>';
 
@@ -83,9 +87,31 @@ include "menu.php";
       overflow-y: visible !important;
     }
   </style>
+<script>
+    // Função para abrir o modal com a imagem ampliada
+    function openModal(imageSrc) {
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        modalImage.src = imageSrc;
+        modal.classList.remove('hidden');
+    }
+
+    // Função para fechar o modal
+    function closeModal() {
+        const modal = document.getElementById('imageModal');
+        modal.classList.add('hidden');
+    }
+</script>
 
 </head>
-  
+  <!-- Modal -->
+<div id="imageModal" class="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 hidden">
+    <div class="relative max-w-4xl mx-auto">
+        <span class="absolute top-0 right-0 mt-4 mr-4 text-white cursor-pointer text-3xl" onclick="closeModal()">&times;</span>
+        <img id="modalImage" class="max-w-96 max-h-96 rounded-lg" src="" alt="Zoomed image">
+    </div>
+</div>
+
   <!--Modal-->
   <div class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
     <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>

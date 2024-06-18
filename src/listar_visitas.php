@@ -57,7 +57,7 @@ $total_pages = ceil($total_records / $results_per_page);
                         <th scope="col" class="px-6 py-3">CPF</th>
                         <th scope="col" class="px-6 py-3">Destino</th>
                         <th scope="col" class="px-6 py-3">Data e Hora</th>
-                        <th scope="col" class="px-6 py-3">Motivo</th>
+                        <th scope="col" class="px-6 py-3">Comentário</th>
                         <th scope="col" class="px-6 py-3">Nota</th>
                     </tr>
                 </thead>

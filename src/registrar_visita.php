@@ -1,15 +1,12 @@
 <?php 
 include "head.php";
 
-// Defina o fuso horário
 date_default_timezone_set('America/Sao_Paulo');
 
-// Obtenha a data e hora atual
 $dataHoraAtual = date('d/m/Y H:i:s');
 
-// Exiba a data e hora atual
-echo "Data e Hora Atual: " . $dataHoraAtual;
 ?>
+<script src="./scripts/hora.js"></script>
 
 <?php include "menu.php"; ?>
 <style>
@@ -40,7 +37,7 @@ echo "Data e Hora Atual: " . $dataHoraAtual;
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                 </svg>
             </div>
-            <input type="search" id="cpf-search" name="cpf-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Buscar pelo CPF..." required />
+            <input type="search" oninput="formatarCPF(this)" id="cpf-search" name="cpf-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Buscar pelo CPF..." required />
             <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-[#16A34A] hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Buscar</button>
         </div>
     </form>
@@ -68,7 +65,7 @@ echo "Data e Hora Atual: " . $dataHoraAtual;
             <div class="mb-5 w-full px-3 sm:w-1/3" >
                 <label for="email" class="mb-3 block text-base font-medium text-[#07074D]">Destino</label>
                 <select id="countries" name="destino" class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#16A34A] focus:shadow-md" required>
-                  <option selected>Escolha o destino</option>
+                  <option value="" selected>Escolha o crachá</option>
                   <option value="FSB">FSB</option>
                   <option value="PRM">PRM</option>
                   <option value="FUSEX">FUSEX</option>
@@ -258,7 +255,19 @@ document.getElementById('form-visita').addEventListener('submit', function(event
     });
 });
 </script>
+<script>
+    function formatarCPF(campo) {
+        let cpf = campo.value.replace(/\D/g, '');
 
+        cpf = cpf.slice(0, 11);
+
+        cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+        cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
+        campo.value = cpf;
+    }
+</script>
 
 
           
